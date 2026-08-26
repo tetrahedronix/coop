@@ -14,7 +14,7 @@ type (
 type Entity = ecs.Entity
 
 // Alias per il sistema
-type SYstem = ecs.System
+type System = ecs.System
 
 // Aliasi per l'interfaccia Component
 type Component = ecs.Component
