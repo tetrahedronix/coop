@@ -1,8 +1,9 @@
 # Coop‑Googol Engine
 
-**Coop‑Googol** is a Go‑based Entity‑Component‑System (ECS) engine that implements the *Tharsis* double‑buffering paradigm.  It powers a 2‑D tile‑based "Road to Moscow" demo built with **Ebiten** and optional **Box2D** physics.
+**Coop‑Googol** is a Go‑based Entity‑Component‑System (ECS) engine that implements the *Tharsis* double‑buffering pattern. It powers a 2‑D tile‑based demo inspired by 'Road to Moscow' game (1984), built with Ebiten and optional Box2D for physics.
 
-**Coop‑Googol** is a Go‑based Entity‑Component‑System (ECS) engine that implements the *Tharsis* double‑buffering pattern. It powers a 2‑D tile‑based demo inspired by 'Road to Moscow', built with Ebiten and optional Box2D for physics.
+The included examples demonstrate rendering, input handling, path‑finding, and optional physics integration. The roadmap is split into staged plans, key characteristics, and a priority‑ordered implementation list.
+
 
 ---
 
@@ -11,18 +12,15 @@
 1. **Prerequisites** – Go 1.20+ (module `go.mod`), `git`.
 2. Clone the repository and initialise the module:
    ```bash
-   git clone <repo‑url>
-   cd coop‑googol
+   git clone https://github.com/tetrahedronix/coop.git
+   cd coop
    go mod tidy
    ```
 3. Build and run the demo:
    ```bash
-   go run ./src/demos/lastduel/main.go
+   go run ./src/examples/createEntity/main.go
    ```
-   The demo loads a Tiled JSON map, displays entities, and supports selection, movement (A), attack (C) and disband (D).
-4. **Persistence** – Press **S** to save the current world to `save.json`; press **L** to reload.
-
----
+   This example initializes a Googol world, creates an entity, attaches Shape and Position components, adds a dummy system, then prints the entity ID and each component's data.
 
 ## Features
 
@@ -43,11 +41,3 @@
 ## License
 
 This project is licensed under the **Apache License 2.0**.
-
----
-
-*For deeper implementation details see `doc/specs.md` and the source code under `googol/`.*
-
-**Coop‑Googol** is a Go‑based ECS (Entity‑Component‑System) engine built around the *Tharsis* double‑buffering paradigm. The repository contains the core engine, example programs, and a detailed development roadmap.
-
-The engine targets a 2‑D tile‑based game demo that demonstrates rendering, input handling, path‑finding, and optional physics integration. The roadmap is split into staged plans, key characteristics, and a priority‑ordered implementation list.
