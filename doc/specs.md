@@ -161,7 +161,7 @@ type System interface {
 
 ---
 
-## 7. Demo – `src/demos/lastduel/main.go`
+## 7. Demo – `demos/lastduel/main.go`
 
 - **Entry point**:
   - Creates a `World`.
@@ -189,34 +189,6 @@ type System interface {
 - **Benchmarks**:
   - `BenchmarkAStar-8` on 50×50, 100×100, and 200×200 maps.
   - `BenchmarkLoop-8` for 60 fps with 100 entities.
-
----
-
-## 9. CI / Docker
-
-- **GitHub Actions** workflow:
-  - `go build`
-  - `go test ./...`
-  - `go vet`
-  - `staticcheck`
-  - benchmarks
-  - headless integration test.
-- **Dockerfile** (multistage):
-  ```Dockerfile
-  # ---------- Builder ----------
-  FROM golang:1.22 AS builder
-  WORKDIR /src
-  COPY go.mod go.sum ./
-  RUN go mod download
-  COPY . .
-  RUN go build -o /app ./src/demos/lastduel
-
-  # ---------- Runtime ----------
-  FROM alpine:3.19
-  RUN apk add --no-cache ca-certificates
-  COPY --from=builder /app /app
-  ENTRYPOINT ["/app"]
-  ```
 
 ---
 

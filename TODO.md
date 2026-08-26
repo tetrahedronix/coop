@@ -29,7 +29,7 @@
 
 | # | Step | Description | Expected Output | Status |
 |---|------|-------------|------------------|--------|
-| 7 | **Final demo** | Move the demo to `src/demos/lastduel/main.go`. Update imports to `gitlab.com/tetrahedronix/coop/googol` and `gitlab.com/tetrahedronix/coop/googol/ecs`. Display the map, unit selection (color change), movement with the **A** key, attack **C**, disband **D**. | Playable demo, runnable with `go run …` | ⬜ |
+| 7 | **Final demo** | Move the demo to `demos/lastduel/main.go`. Update imports to `github.com/tetrahedronix/coop/googol` and `github.com/tetrahedronix/coop/googol/ecs`. Display the map, unit selection (color change), movement with the **A** key, attack **C**, disband **D**. | Playable demo, runnable with `go run …` | ⬜ |
 | 9 | **CI & Docker** | GitHub Actions (build, test, lint, benchmark). Multistage Docker: builder → minimal runtime. | Green CI, ready Docker image | ⬜ |
 |10 | **Documentation** | Update `README` (quick‑start, screenshots). Update `AGENTS.md` with any new commands. | Complete docs | ⬜ |
 
