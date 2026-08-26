@@ -27,9 +27,10 @@ func (s *Shape) Get() any {
 }
 
 func (s *Shape) Reset() {
-
+	s.Primitive = ""
 }
 
+// Per il momento solo mondi 2D
 type Coordinate [2]float64
 
 // The position of the entity on the screen
@@ -62,10 +63,40 @@ func (p *Position) Get() any {
 }
 
 func (p *Position) Reset() {
-
+	p.Coordinate = Coordinate{0, 0}
 }
+
+type Speed float64
+
+type Direction float64
 
 // The speed and direction in which the entity moves
 type Velocity struct {
-	v, d float64
+	Speed     Speed
+	Direction Direction
+}
+
+func (v *Velocity) Add(data any) {
+	// Si aspetta un valore di tipo Velocity (non puntatore)
+	d := data.(Velocity)
+	v.Speed = d.Speed
+	v.Direction = d.Direction
+}
+
+func (v *Velocity) Copy(src any) {
+	s := src.(*Velocity)
+	v.Speed = s.Speed
+	v.Direction = s.Direction
+}
+
+func (v *Velocity) Get() any {
+	return Velocity{Speed: v.Speed, Direction: v.Direction}
+}
+
+func (v *Velocity) Reset() {
+	v.Speed, v.Direction = 0, 0
+}
+
+func NewVelocity() Component {
+	return &Velocity{}
 }

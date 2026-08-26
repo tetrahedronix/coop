@@ -1,6 +1,8 @@
 package googol
 
-import "gitlab.com/tetrahedronix/coop/googol/ecs"
+import (
+	"gitlab.com/tetrahedronix/coop/googol/ecs"
+)
 
 func EqualPosition(a, b *ecs.Position) bool {
 
@@ -53,4 +55,8 @@ func NewPosition() *Position {
 
 func NewShape() *Shape {
 	return ecs.NewShape().(*Shape)
+}
+
+func NewVelocity() *Velocity {
+	return ecs.NewVelocity().(*Velocity)
 }
