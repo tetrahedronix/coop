@@ -1,9 +1,11 @@
 package ecs
 
+type Primitive string
+
 // The type of shape: for example circle or box
 type Shape struct {
 	componentType ComponentTypeID
-	primitive     string
+	Primitive     Primitive
 }
 
 func NewShape() Component {
@@ -13,15 +15,15 @@ func NewShape() Component {
 
 func (s *Shape) Add(data any) {
 
-	s.primitive = data.(string)
+	s.Primitive = data.(Primitive)
 }
 
 func (s *Shape) Copy(src any) {
-
+	s.Primitive = src.(*Shape).Primitive
 }
 
 func (s *Shape) Get() any {
-	return s.primitive
+	return s.Primitive
 }
 
 func (s *Shape) Reset() {
