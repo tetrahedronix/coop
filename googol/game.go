@@ -1,6 +1,9 @@
 package googol
 
 import (
+	"fmt"
+	"io"
+
 	"github.com/sony/sonyflake"
 	"github.com/tetrahedronix/coop/googol/ecs"
 
@@ -8,7 +11,6 @@ import (
 )
 
 func init() {
-
 	// Create a new Sonyflake instance 'flake' configured with
 	// the given argument. https://github.com/sony/Sonyflake */
 	flake = sonyflake.NewSonyflake(sonyflake.Settings{})
@@ -21,29 +23,32 @@ func init() {
 var flake *sonyflake.Sonyflake
 
 type World struct {
+	Logger *log.Logger
 	// Whether the world tick should execute
 	enabled bool
 }
 
 func NewWorld() *World {
 
-	return &World{true}
+	return &World{
+		Logger:  log.New(io.Discard, "", 0),
+		enabled: true,
+	}
 }
 
 // createEntity creates a new entity struct
-func (w *World) CreateEntity() *ecs.Entity {
+func (w *World) CreateEntity() (*ecs.Entity, error) {
 
 	// Gets a new unique ID with Sonyflake package.
 	id, err := flake.NextID()
 
 	if err != nil {
-		// DEBUG
-		log.Fatalf("flake.NextID() failed with %s\n", err)
+		return nil, fmt.Errorf("flake.NextID() failed with %w\n", err)
 	}
 
-	log.Printf("a new Entity has been initialized with EGUID: [%x]\n", id)
+	w.Logger.Printf("a new Entity has been initialized with EGUID: [%x]\n", id)
 
-	return ecs.NewEntity(id)
+	return ecs.NewEntity(id), nil
 
 }
 

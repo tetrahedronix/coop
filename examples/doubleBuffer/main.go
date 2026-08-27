@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/tetrahedronix/coop/googol"
 )
@@ -19,12 +20,20 @@ func main() {
 	world := googol.NewWorld()
 
 	// Creazione entità #e1
-	e1 := world.CreateEntity()
+	e1, err := world.CreateEntity()
+	if err != nil {
+		os.Exit(1)
+	}
 	e1.AddComponent(googol.NewShape(), "circle")
 	e1.AddComponent(googol.NewPosition(), googol.Coordinate{0.0, 0.0})
 
 	// Creazione entità #e2
-	e2 := world.CreateEntity()
+	e2, err := world.CreateEntity()
+
+	if err != nil {
+		os.Exit(1)
+	}
+
 	e2.AddComponent(googol.NewShape(), "square")
 	e2.AddComponent(googol.NewPosition(), googol.Coordinate{5.0, 5.0})
 

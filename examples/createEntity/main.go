@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/tetrahedronix/coop/googol"
 )
@@ -12,24 +13,28 @@ func main() {
 	gw := googol.NewWorld()
 
 	// Crea una nuova entità nel mondo
-	e := gw.CreateEntity()
+	entity, err := gw.CreateEntity()
+
+	if err != nil {
+		os.Exit(1)
+	}
 
 	// Aggiunge un componente Shape (con dato "circle")
-	e.AddComponent(googol.NewShape(), "circle")
+	entity.AddComponent(googol.NewShape(), "circle")
 
 	// Aggiunge un componente Position (con coordinate)
-	e.AddComponent(googol.NewPosition(), googol.Coordinate{10.0, 20.0})
+	entity.AddComponent(googol.NewPosition(), googol.Coordinate{10.0, 20.0})
 
 	// Crea un sistema (demo, non fa nulla)
 	gw.CreateSystem()
 
 	// Stampa le informazioni dell'entità
-	fmt.Printf("Entity ID: %x\n", e.Id())
-	fmt.Printf("Numero di componenti: %d\n", e.LenComponent())
+	fmt.Printf("Entity ID: %x\n", entity.Id())
+	fmt.Printf("Numero di componenti: %d\n", entity.LenComponent())
 
 	// Itera e stampa ogni componente
-	for i := 0; i < e.LenComponent(); i++ {
-		comp := e.GetComponent(i)
+	for i := 0; i < entity.LenComponent(); i++ {
+		comp := entity.GetComponent(i)
 		fmt.Printf("Componente %d: %T %+v\n", i, comp, comp)
 		// Mostra anche i dati interni tramite il metodo Get()
 		if comp != nil {

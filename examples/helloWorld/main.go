@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/tetrahedronix/coop/googol"
 )
@@ -9,9 +10,13 @@ import (
 func main() {
 	gw := googol.NewWorld()
 
-	e := gw.CreateEntity()
+	entity, err := gw.CreateEntity()
 
-	e.AddComponent(googol.NewShape(), "Hello World")
+	if err != nil {
+		os.Exit(1)
+	}
 
-	fmt.Println(e)
+	entity.AddComponent(googol.NewShape(), "Hello World")
+
+	fmt.Println(entity)
 }
