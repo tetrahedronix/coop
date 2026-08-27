@@ -2,7 +2,7 @@ package googol
 
 import (
 	"github.com/sony/sonyflake"
-	"gitlab.com/tetrahedronix/coop/googol/ecs"
+	"github.com/tetrahedronix/coop/googol/ecs"
 
 	"log"
 )

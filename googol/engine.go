@@ -1,6 +1,6 @@
 package googol
 
-import "gitlab.com/tetrahedronix/coop/googol/ecs"
+import "github.com/tetrahedronix/coop/googol/ecs"
 
 type Loop struct {
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gitlab.com/tetrahedronix/coop/googol"
+	"github.com/tetrahedronix/coop/googol"
 )
 
 func main() {

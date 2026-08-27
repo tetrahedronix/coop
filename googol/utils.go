@@ -1,7 +1,7 @@
 package googol
 
 import (
-	"gitlab.com/tetrahedronix/coop/googol/ecs"
+	"github.com/tetrahedronix/coop/googol/ecs"
 )
 
 func EqualPosition(a, b *ecs.Position) bool {

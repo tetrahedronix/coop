@@ -1,5 +1,7 @@
 package ecs
 
+import "fmt"
+
 // Entities have IDs
 type Guid interface {
 	Id() uint64
@@ -82,6 +84,11 @@ func (e *Entity) GetWritable(i int) Component {
 
 	return nil
 
+}
+
+func (e *Entity) String() string {
+	return fmt.Sprintf("Entity[%x] (%d past, %d future)",
+		e.guid, len(e.componentsPast), len(e.componentsFuture))
 }
 
 func (e *Entity) Id() uint64 {
