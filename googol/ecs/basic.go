@@ -6,11 +6,6 @@ type Shape struct {
 	primitive     string
 }
 
-func NewShape() Component {
-
-	return &Shape{}
-}
-
 func (s *Shape) Add(data any) {
 
 	s.primitive = data.(string)
@@ -28,6 +23,11 @@ func (s *Shape) Reset() {
 	s.primitive = ""
 }
 
+func NewShape() Component {
+
+	return &Shape{}
+}
+
 // Per il momento solo mondi 2D
 type Coordinate [2]float64
 
@@ -35,11 +35,6 @@ type Coordinate [2]float64
 type Position struct {
 	ComponentType ComponentTypeID
 	Coordinate    Coordinate
-}
-
-func NewPosition() Component {
-
-	return &Position{}
 }
 
 // Metodo Add: accetta esplicitamente Coordinate
@@ -62,6 +57,11 @@ func (p *Position) Get() any {
 
 func (p *Position) Reset() {
 	p.Coordinate = Coordinate{0, 0}
+}
+
+func NewPosition() Component {
+
+	return &Position{}
 }
 
 type Speed float64

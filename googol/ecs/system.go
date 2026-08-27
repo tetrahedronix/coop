@@ -7,6 +7,10 @@ import (
 
 type System struct{}
 
+func (s *System) Process() {
+
+}
+
 // Systems have logic
 func NewSystem() {
 
@@ -26,8 +30,4 @@ func NewSystem() {
 	r.Do(func(p any) {
 		fmt.Println(p.(string))
 	})
-}
-
-func (s *System) Process() {
-
 }

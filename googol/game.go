@@ -28,14 +28,6 @@ type World struct {
 	enabled bool
 }
 
-func NewWorld() *World {
-
-	return &World{
-		Logger:  log.New(io.Discard, "", 0),
-		enabled: true,
-	}
-}
-
 // createEntity creates a new entity struct
 func (w *World) CreateEntity() (*ecs.Entity, error) {
 
@@ -54,4 +46,12 @@ func (w *World) CreateEntity() (*ecs.Entity, error) {
 
 func (w *World) CreateSystem() *ecs.System {
 	return &ecs.System{}
+}
+
+func NewWorld() *World {
+
+	return &World{
+		Logger:  log.New(io.Discard, "", 0),
+		enabled: true,
+	}
 }
