@@ -1,33 +1,5 @@
 package ecs
 
-// The type of shape: for example circle or box
-type Shape struct {
-	componentType ComponentTypeID
-	primitive     string
-}
-
-func (s *Shape) Add(data any) {
-
-	s.primitive = data.(string)
-}
-
-func (s *Shape) Copy(src any) {
-	s.primitive = src.(*Shape).primitive
-}
-
-func (s *Shape) Get() any {
-	return s.primitive
-}
-
-func (s *Shape) Reset() {
-	s.primitive = ""
-}
-
-func NewShape() Component {
-
-	return &Shape{}
-}
-
 // Per il momento solo mondi 2D
 type Coordinate [2]float64
 
@@ -62,6 +34,59 @@ func (p *Position) Reset() {
 func NewPosition() Component {
 
 	return &Position{}
+}
+
+type Selectable struct {
+	ComponentType ComponentTypeID
+	Selected      bool
+}
+
+func (s *Selectable) Add(data any) {
+	s.Selected = data.(bool)
+}
+
+func (s *Selectable) Copy(src any) {
+	s.Selected = src.(*Selectable).Selected
+}
+
+func (s *Selectable) Get() any {
+	return s.Selected
+}
+
+func (s *Selectable) Reset() {
+	s.Selected = false
+}
+
+func NewSelectable() Component {
+	return &Selectable{}
+}
+
+// The type of shape: for example circle or box
+type Shape struct {
+	componentType ComponentTypeID
+	primitive     string
+}
+
+func (s *Shape) Add(data any) {
+
+	s.primitive = data.(string)
+}
+
+func (s *Shape) Copy(src any) {
+	s.primitive = src.(*Shape).primitive
+}
+
+func (s *Shape) Get() any {
+	return s.primitive
+}
+
+func (s *Shape) Reset() {
+	s.primitive = ""
+}
+
+func NewShape() Component {
+
+	return &Shape{}
 }
 
 type Speed float64

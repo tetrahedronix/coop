@@ -7,7 +7,9 @@ type (
 	Coordinate = ecs.Coordinate
 	Position   = ecs.Position
 	Shape      = ecs.Shape
+	Tile       = ecs.Tile
 	Velocity   = ecs.Velocity
+	Selectable = ecs.Selectable
 )
 
 // Alias per l'entità
