@@ -26,7 +26,7 @@ func CopyComponent(src Component) Component {
 		return dst
 	case *Shape:
 		dst := NewShape().(*Shape)
-		dst.primitive = src.primitive
+		dst.Primitive = src.Primitive
 		return dst
 		// Altri componenti
 		// ...
