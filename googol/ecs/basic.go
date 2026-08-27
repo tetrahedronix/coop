@@ -1,11 +1,9 @@
 package ecs
 
-type Primitive string
-
 // The type of shape: for example circle or box
 type Shape struct {
 	componentType ComponentTypeID
-	Primitive     Primitive
+	primitive     string
 }
 
 func NewShape() Component {
@@ -15,19 +13,19 @@ func NewShape() Component {
 
 func (s *Shape) Add(data any) {
 
-	s.Primitive = data.(Primitive)
+	s.primitive = data.(string)
 }
 
 func (s *Shape) Copy(src any) {
-	s.Primitive = src.(*Shape).Primitive
+	s.primitive = src.(*Shape).primitive
 }
 
 func (s *Shape) Get() any {
-	return s.Primitive
+	return s.primitive
 }
 
 func (s *Shape) Reset() {
-	s.Primitive = ""
+	s.primitive = ""
 }
 
 // Per il momento solo mondi 2D
