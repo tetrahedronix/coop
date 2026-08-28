@@ -1,103 +1,57 @@
-# Ignore all
-*
+```
+# Go build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
 
-# Unignore all with extensions
-# !*.*
-# Unignore all with extensions
-!*.tex
-!*.pdf
-!*.md
-!*.go
-!*.cpp
-!*.h
-!*.png
-!*.jpg
-!*.lean
-!*.mojo
-!*.toml
-!*.txt
-!*.py
-!*.js
-!*.html
-!*.org
-!Makefile
+# Go cache and modules
+go.sum
+go.mod.bak
+*.mod
+*.mod.bak
+*.info
+*.test
+*.prof
 
-# Unignore Go file
-!go.mod
-!go.sum
+# Dependencies
+vendor/
 
-# Unignore occ templates and YAML configs/fixtures
-!*.tmpl
-!*.yml
-!*.yaml
+# Build directories
+bin/
+pkg/
+target/
 
-# Unignore Dockerfile e script di avvio
-!Dockerfile
-!*.sh
-
-# Unignore all dirs
-!*/
-
-# Ignore .backups directory
-.backups
-*/**/.backups
-
-!*_*.org
-!*.jsonl
-!*.json
-
-!.gitignore
-*/**/scripts
-
-.llemma_env
-
-.opencode
-.specify
-.cache
-.gemini
-.npm
-.bun
-.local
-.config
-.vscode
-.vscode/
-.ssh
-opencode.json
-global.json
+# Logs
+*.log
 
 # Environment
 .env
 .env.local
 .env.*
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Editors
+# Editor/IDE
+.vscode/
 .idea/
-
-# Dependencies
-node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-dist/
-build/
-target/
-.gradle/
-
-# OS generated files
+*.swp
+*.swo
+*~
 .DS_Store
 Thumbs.db
 
-# Coverage reports
+# Coverage
 coverage/
 htmlcov/
 .coverage
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
 
 # Compressed files
 *.zip
@@ -122,7 +76,4 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-
-# Ignore specific build artifacts
-examples/createEntity/createEntity
-examples/doubleBuffer/doubleBuffer
+```
