@@ -123,6 +123,6 @@ htmlcov/
 *.tar.xz
 *.tar.zst
 
-# Ignore specific build artifacts
-examples/createEntity/createEntity
-examples/doubleBuffer/doubleBuffer
+# NOTE FOR QWEN CODER:
+# DO NOT modify this file.
+# Any additions must be reported to the maintainer.
