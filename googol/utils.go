@@ -8,7 +8,7 @@ func EqualPosition(a, b *ecs.Position) bool {
 
 	//return a.coordinate == b.coordinate
 
-	return a.Coordinate == b.Coordinate
+	return a.Get() == b.Get()
 
 }
 
