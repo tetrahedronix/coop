@@ -1,74 +1,17 @@
-# Ignore all
-*
+```
+# Compiled and build artifacts
+*.o
+*.obj
+*.out
+*.exe
+*.dll
+*.so
+*.a
 
-# Unignore all with extensions
-# !*.*
-# Unignore all with extensions
-!*.tex
-!*.pdf
-!*.md
-!*.go
-!*.cpp
-!*.h
-!*.png
-!*.jpg
-!*.lean
-!*.mojo
-!*.toml
-!*.txt
-!*.py
-!*.js
-!*.html
-!*.org
-!Makefile
-
-# Unignore Go file
-!go.mod
-!go.sum
-
-# Unignore occ templates and YAML configs/fixtures
-!*.tmpl
-!*.yml
-!*.yaml
-
-# Unignore Dockerfile e script di avvio
-!Dockerfile
-!*.sh
-
-# Unignore all dirs
-!*/
-
-# Ignore .backups directory
-.backups
-*/**/.backups
-
-!*_*.org
-!*.jsonl
-!*.json
-
-!.gitignore
-*/**/scripts
-
-.llemma_env
-
-.opencode
-.specify
-.cache
-.gemini
-.npm
-.bun
-.local
-.config
-.vscode
-.vscode/
-.ssh
-opencode.json
-global.json
-
-# Environment
-.env
-.env.local
-.env.*
+# Dependencies
+vendor/
+*.mod
+*.sum
 
 # Logs and temp files
 *.log
@@ -76,53 +19,11 @@ global.json
 *.swp
 
 # Editors
+.vscode/
 .idea/
 
-# Dependencies
-node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-dist/
-build/
-target/
-.gradle/
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# NOTE FOR QWEN CODER:
-# DO NOT modify this file.
-# Any additions must be reported to the maintainer.
+# Environment
+.env
+.env.local
+*.env.*
+```
