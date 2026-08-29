@@ -3,6 +3,7 @@ package googol
 import (
 	"fmt"
 	"io"
+	"sync"
 
 	"github.com/sony/sonyflake"
 	"github.com/tetrahedronix/coop/googol/ecs"
@@ -23,7 +24,11 @@ func init() {
 var flake *sonyflake.Sonyflake
 
 type World struct {
-	Logger *log.Logger
+	// Proteggere a slice di entità con un mutex
+	mu           sync.RWMutex
+	entities     []*ecs.Entity
+	deleteEntity map[uint64]bool
+	Logger       *log.Logger
 	// Whether the world tick should execute
 	enabled bool
 }
@@ -38,14 +43,82 @@ func (w *World) CreateEntity() (*ecs.Entity, error) {
 		return nil, fmt.Errorf("flake.NextID() failed with %w\n", err)
 	}
 
+	e := ecs.NewEntity(id)
+
+	w.mu.Lock()
+	w.entities = append(w.entities, e)
+	w.mu.Unlock()
 	w.Logger.Printf("a new Entity has been initialized with EGUID: [%x]\n", id)
 
-	return ecs.NewEntity(id), nil
-
+	return e, nil
 }
 
-func (w *World) CreateSystem() *ecs.System {
-	return &ecs.System{}
+func (w *World) GetEntities() []*ecs.Entity {
+	w.mu.RLock()
+	defer w.mu.RUnlock()
+
+	return append([]*ecs.Entity{}, w.entities...)
+}
+
+func (w *World) MarkForRemoval(id uint64) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	if w.deleteEntity == nil {
+		w.deleteEntity = make(map[uint64]bool)
+	}
+
+	w.deleteEntity[id] = true
+}
+
+func (w *World) PurgeRemoved() {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	if len(w.deleteEntity) == 0 {
+		return
+	}
+
+	keep := w.entities[:0]
+
+	for _, e := range w.entities {
+		if !w.deleteEntity[e.Id()] {
+			keep = append(keep, e)
+		}
+	}
+
+	w.entities = keep
+
+	// Svuota la mpaa
+	w.deleteEntity = make(map[uint64]bool)
+}
+
+// RemoveEntity rimuove l'entità con l'ID specificato dal mondo.
+// Restituisce true se l'entità è stata trovata e rimossa, false altrimenti
+func (w *World) RemoveEntity(id uint64) bool {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	for i, e := range w.entities {
+		if e.Id() == id {
+			// Rimuove l'elemento in posizione i
+			w.entities = append(w.entities[:i], w.entities[i+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
+
+func (w *World) SwapBuffers() {
+	w.mu.RLock()
+	defer w.mu.Unlock()
+
+	for _, e := range w.entities {
+		if !ecs.SwapBuffers(e) {
+			w.Logger.Printf("swap failed for entity %d", e.Id())
+		}
+	}
 }
 
 func NewWorld() *World {

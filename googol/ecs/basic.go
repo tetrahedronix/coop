@@ -5,30 +5,34 @@ type Coordinate [2]float64
 
 // The position of the entity on the screen
 type Position struct {
-	ComponentType ComponentTypeID
-	Coordinate    Coordinate
+	componentType ComponentTypeID
+	coordinate    Coordinate
 }
 
 // Metodo Add: accetta esplicitamente Coordinate
 func (p *Position) Add(data any) {
 	// Type assertion su Coordinate (non su [2]float64)
-	p.Coordinate = data.(Coordinate)
+	p.coordinate = data.(Coordinate)
 }
 
 // Copy performs a deep copy of coordinates from src (must be *Position) to p.
 // It panics if src is not a *Position. The copy is independent because
 // coordinates are a value array [2]float64.
 func (p *Position) Copy(src any) {
-	p.Coordinate = src.(*Position).Coordinate
+	p.coordinate = src.(*Position).coordinate
 }
 
 // Metodo Get: restituisce Coordinate
 func (p *Position) Get() any {
-	return p.Coordinate
+	return p.coordinate
 }
 
 func (p *Position) Reset() {
-	p.Coordinate = Coordinate{0, 0}
+	p.coordinate = Coordinate{0, 0}
+}
+
+func (p *Position) TypeID() ComponentTypeID {
+	return p.componentType
 }
 
 func NewPosition() Component {
@@ -37,24 +41,28 @@ func NewPosition() Component {
 }
 
 type Selectable struct {
-	ComponentType ComponentTypeID
-	Selected      bool
+	componentType ComponentTypeID
+	selected      bool
 }
 
 func (s *Selectable) Add(data any) {
-	s.Selected = data.(bool)
+	s.selected = data.(bool)
 }
 
 func (s *Selectable) Copy(src any) {
-	s.Selected = src.(*Selectable).Selected
+	s.selected = src.(*Selectable).selected
 }
 
 func (s *Selectable) Get() any {
-	return s.Selected
+	return s.selected
 }
 
 func (s *Selectable) Reset() {
-	s.Selected = false
+	s.selected = false
+}
+
+func (s *Selectable) TypeID() ComponentTypeID {
+	return s.componentType
 }
 
 func NewSelectable() Component {
@@ -84,6 +92,10 @@ func (s *Shape) Reset() {
 	s.primitive = ""
 }
 
+func (s *Shape) TypeID() ComponentTypeID {
+	return s.componentType
+}
+
 func NewShape() Component {
 
 	return &Shape{}
@@ -95,29 +107,34 @@ type Direction float64
 
 // The speed and direction in which the entity moves
 type Velocity struct {
-	Speed     Speed
-	Direction Direction
+	componentType ComponentTypeID
+	speed         Speed
+	direction     Direction
 }
 
 func (v *Velocity) Add(data any) {
 	// Si aspetta un valore di tipo Velocity (non puntatore)
 	d := data.(Velocity)
-	v.Speed = d.Speed
-	v.Direction = d.Direction
+	v.speed = d.speed
+	v.direction = d.direction
 }
 
 func (v *Velocity) Copy(src any) {
 	s := src.(*Velocity)
-	v.Speed = s.Speed
-	v.Direction = s.Direction
+	v.speed = s.speed
+	v.direction = s.direction
 }
 
 func (v *Velocity) Get() any {
-	return Velocity{Speed: v.Speed, Direction: v.Direction}
+	return Velocity{speed: v.speed, direction: v.direction}
 }
 
 func (v *Velocity) Reset() {
-	v.Speed, v.Direction = 0, 0
+	v.speed, v.direction = 0, 0
+}
+
+func (v *Velocity) TypeID() ComponentTypeID {
+	return v.componentType
 }
 
 func NewVelocity() Component {

@@ -12,6 +12,7 @@ type Guid interface {
 type Entity struct {
 	// Use Sonyflake to get unique GUID
 	guid             uint64
+	signature        uint64
 	componentsPast   []Component
 	componentsFuture []Component
 }
@@ -21,6 +22,7 @@ type Entity struct {
 func (e *Entity) AddComponent(c Component, data ...interface{}) {
 
 	e.componentsPast = append(e.componentsPast, c)
+	e.signature |= 1 << c.TypeID()
 
 	for _, d := range data {
 		e.componentsPast[len(e.componentsPast)-1].Add(d)
@@ -34,14 +36,6 @@ func (e *Entity) AddFutureComponent(c Component, data ...any) {
 	for _, d := range data {
 		e.componentsFuture[len(e.componentsFuture)-1].Add((d))
 	}
-}
-
-func (e *Entity) LenComponent() int {
-	return len(e.componentsPast)
-}
-
-func (e *Entity) LenFutureComponent() int {
-	return len(e.componentsFuture)
 }
 
 // Metodo pubblico per accedere al past (lettura)
@@ -86,6 +80,18 @@ func (e *Entity) GetWritable(i int) Component {
 
 }
 
+func (e *Entity) LenComponent() int {
+	return len(e.componentsPast)
+}
+
+func (e *Entity) LenFutureComponent() int {
+	return len(e.componentsFuture)
+}
+
+func (e *Entity) HasComponent(tid ComponentTypeID) bool {
+	return (e.signature & (1 << tid)) != 0
+}
+
 func (e *Entity) String() string {
 	return fmt.Sprintf("Entity[%x] (%d past, %d future)",
 		e.guid, len(e.componentsPast), len(e.componentsFuture))
@@ -101,4 +107,20 @@ func NewEntity(id uint64) *Entity {
 	return &Entity{
 		guid: id,
 	}
+}
+
+// SwapBuffers scambia i due buffer di componenti dell'entità.
+// Restituisce false se l'entità è nil o se i buffer hanno lunghezze diverse.
+func SwapBuffers(e *Entity) bool {
+	if e == nil {
+		return false
+	}
+
+	if e.LenComponent() != e.LenFutureComponent() {
+		return false
+	}
+
+	e.componentsPast, e.componentsFuture = e.componentsFuture, e.componentsPast
+
+	return true
 }

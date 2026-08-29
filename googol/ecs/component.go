@@ -2,8 +2,17 @@ package ecs
 
 type ComponentTypeID uint64
 
+const (
+	ComponentTypePosition ComponentTypeID = iota
+	ComponentTypeSelectable
+	ComponentTypeShape
+	ComponentTypeVelocity
+	ComponentTypeTile
+)
+
 // Components have data
 type Component interface {
+	TypeID() ComponentTypeID
 	Add(interface{})
 	Copy(interface{})
 	Get() interface{}
@@ -22,7 +31,7 @@ func CopyComponent(src Component) Component {
 	switch src := src.(type) {
 	case *Position:
 		dst := NewPosition().(*Position)
-		dst.Coordinate = src.Coordinate
+		dst.coordinate = src.coordinate
 		return dst
 	case *Shape:
 		dst := NewShape().(*Shape)

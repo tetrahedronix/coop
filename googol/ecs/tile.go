@@ -32,6 +32,10 @@ func (t *Tile) Reset() {
 	t.GID = 0
 }
 
+func (t *Tile) TypeID() ComponentTypeID {
+	return t.ComponentType
+}
+
 // NewTile restituisce un nuovo componente Tile
 func NewTile() Component {
 	return &Tile{}
