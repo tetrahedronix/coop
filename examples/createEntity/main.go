@@ -25,9 +25,6 @@ func main() {
 	// Aggiunge un componente Position (con coordinate)
 	entity.AddComponent(googol.NewPosition(), googol.Coordinate{10.0, 20.0})
 
-	// Crea un sistema (demo, non fa nulla)
-	gw.CreateSystem()
-
 	// Stampa le informazioni dell'entità
 	fmt.Printf("Entity ID: %x\n", entity.Id())
 	fmt.Printf("Numero di componenti: %d\n", entity.LenComponent())

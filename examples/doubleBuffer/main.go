@@ -65,7 +65,7 @@ func printEntity(name string, e *googol.Entity, idx int) {
 
 	if comp != nil {
 		pos := comp.(*googol.Position)
-		fmt.Printf("%s: Position = %v\n", name, pos.Coordinate)
+		fmt.Printf("%s: Position = %v\n", name, pos.Get())
 	} else {
 		fmt.Printf("%s: nessun Position all'indice %d\n", name, idx)
 	}
@@ -77,7 +77,8 @@ func modifyPositionFuture(e *googol.Entity, idx int, newCoord googol.Coordinate)
 
 	if w != nil {
 		pos := w.(*googol.Position)
-		pos.Coordinate = newCoord
+		//pos.Coordinate = newCoord
+		pos.Add(newCoord)
 		fmt.Printf(" Nuova posizione scritta nel future: %v\n", newCoord)
 	} else {
 		fmt.Printf("	Impossibile modificare: indice %d non valido\n", idx)
@@ -92,11 +93,11 @@ func compareEntity(name string, e *googol.Entity, idx int) {
 	pastVal, futureVal := "nil", "nil"
 
 	if pastComp != nil {
-		pastVal = fmt.Sprintf("%v", pastComp.(*googol.Position).Coordinate)
+		pastVal = fmt.Sprintf("%v", pastComp.(*googol.Position).Get())
 	}
 
 	if futureComp != nil {
-		futureVal = fmt.Sprintf("%v", futureComp.(*googol.Position).Coordinate)
+		futureVal = fmt.Sprintf("%v", futureComp.(*googol.Position).Get())
 	}
 
 	fmt.Printf("%s:\n", name)
