@@ -112,11 +112,11 @@ func (w *World) RemoveEntity(id uint64) bool {
 
 func (w *World) SwapBuffers() {
 	w.mu.RLock()
-	defer w.mu.Unlock()
+	defer w.mu.RUnlock()
 
 	for _, e := range w.entities {
 		if !ecs.SwapBuffers(e) {
-			w.Logger.Printf("swap failed for entity %d", e.Id())
+			w.Logger.Printf("swap failed for entity %x", e.Id())
 		}
 	}
 }
