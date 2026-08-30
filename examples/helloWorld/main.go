@@ -18,5 +18,5 @@ func main() {
 
 	entity.AddComponent(googol.NewShape(), "Hello World")
 
-	fmt.Println(entity)
+	fmt.Println(entity, entity.GetComponent(0))
 }

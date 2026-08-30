@@ -1,5 +1,7 @@
 package ecs
 
+import "fmt"
+
 // Per il momento solo mondi 2D
 type Coordinate [2]float64
 
@@ -94,6 +96,10 @@ func (s *Shape) Reset() {
 
 func (s *Shape) TypeID() ComponentTypeID {
 	return s.componentType
+}
+
+func (s *Shape) String() string {
+	return fmt.Sprintf("%s", s.primitive)
 }
 
 func NewShape() Component {

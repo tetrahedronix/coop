@@ -38,6 +38,33 @@ func GetPastComponent(e *ecs.Entity, i int) ecs.Component {
 	return e.GetComponent(i)
 }
 
+// GetPastComponentByType restituisce il componente del buffer "past"
+// dell'entità che ha il ComponentTypeID specificato. Se non presente,
+// restituisce nil.
+func GetPastComponentByType(e *ecs.Entity, tid ecs.ComponentTypeID) ecs.Component {
+	if e == nil {
+		return nil
+	}
+
+	// Controllo rapido tramite signature (metodo pubblico)
+	if !e.HasComponent(tid) {
+		return nil
+	}
+
+	// Scorre la slice appropriata (past o future) linearmente e restituire la
+	// prima componente che ha TypeID() uguale a tid: semplice, lento O(n) ma
+	// con pochi componenti di base è OK.
+	for i := 0; i < e.LenComponent(); i++ {
+		c := e.GetComponent(i)
+
+		if c != nil && c.TypeID() == tid {
+			return c
+		}
+	}
+
+	return nil
+}
+
 // GetComponentFuture restituisce una copia del componente dall'indice
 // specificato nella slice past e lo inserisce nella slice future, pronto per
 // essere modificato.
