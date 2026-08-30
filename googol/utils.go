@@ -65,6 +65,30 @@ func GetPastComponentByType(e *ecs.Entity, tid ecs.ComponentTypeID) ecs.Componen
 	return nil
 }
 
+// GetFutureCompoentByType restituisce il componente del buffer "future"
+// dell'entità che ha il ComponentTypeId specificato. Se non presente,
+// restituisce nil.
+func GetFutureCompoentByType(e *ecs.Entity, tid ecs.ComponentTypeID) ecs.Component {
+	if e == nil {
+		return nil
+	}
+
+	// Nota: la signature riflette i componenti nel past, non nel future.
+	// Se un componente è stato aggiunto solo al future (durante l'elaborazione
+	// ), la signature potrebbe non averlo ancora. Quindi per il future non
+	// è possibile usare HasComponent(). Occorre scandire direttamente.
+	for i := 0; i < e.LenComponent(); i++ {
+		c := e.GetFutureComponent(i)
+
+		if c != nil && c.TypeID() == tid {
+			return c
+		}
+
+	}
+
+	return nil
+}
+
 // GetComponentFuture restituisce una copia del componente dall'indice
 // specificato nella slice past e lo inserisce nella slice future, pronto per
 // essere modificato.

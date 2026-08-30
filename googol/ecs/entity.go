@@ -9,6 +9,22 @@ type Guid interface {
 
 // Each Entity is nothing more than a Globally Unique Identifier (GUID)
 // with components attached to it.
+//
+// ----------------------------------------------------------------------------
+// EXTENSIBILITY NOTE (64-component limit)
+//
+// The current entity signature uses a single uint64, limiting the engine
+// to 64 distinct component types. This is sufficient for the current scope.
+//
+// If more than 64 types are ever required, replace it with two fields:
+//
+//	signatureBasics uint64  // component types 0-63
+//	signatureCustom uint64  // component types 64-127
+//
+// All bit operations (HasComponent, AddComponent, etc.) must be updated
+// accordingly. To also have fast future-buffer lookups, consider adding a
+// futureSignature (parallel to signature) and swapping it during SwapBuffers.
+// ----------------------------------------------------------------------------
 type Entity struct {
 	// Use Sonyflake to get unique GUID
 	guid             uint64
