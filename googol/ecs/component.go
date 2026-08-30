@@ -3,7 +3,7 @@ package ecs
 type ComponentTypeID uint64
 
 const (
-	ComponentTypePosition ComponentTypeID = iota
+	ComponentTypePosition ComponentTypeID = 1 << iota
 	ComponentTypeSelectable
 	ComponentTypeShape
 	ComponentTypeVelocity

@@ -12,7 +12,7 @@ type Guid interface {
 type Entity struct {
 	// Use Sonyflake to get unique GUID
 	guid             uint64
-	signature        uint64
+	signature        ComponentTypeID
 	componentsPast   []Component
 	componentsFuture []Component
 }
@@ -22,7 +22,7 @@ type Entity struct {
 func (e *Entity) AddComponent(c Component, data ...interface{}) {
 
 	e.componentsPast = append(e.componentsPast, c)
-	e.signature |= 1 << c.TypeID()
+	e.signature |= c.TypeID()
 
 	for _, d := range data {
 		e.componentsPast[len(e.componentsPast)-1].Add(d)
@@ -80,16 +80,16 @@ func (e *Entity) GetWritable(i int) Component {
 
 }
 
+func (e *Entity) HasComponent(tid ComponentTypeID) bool {
+	return (e.signature & tid) != 0
+}
+
 func (e *Entity) LenComponent() int {
 	return len(e.componentsPast)
 }
 
 func (e *Entity) LenFutureComponent() int {
 	return len(e.componentsFuture)
-}
-
-func (e *Entity) HasComponent(tid ComponentTypeID) bool {
-	return (e.signature & (1 << tid)) != 0
 }
 
 func (e *Entity) String() string {
