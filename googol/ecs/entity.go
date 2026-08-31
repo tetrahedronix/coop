@@ -60,9 +60,21 @@ func (e *Entity) GetComponent(i int) Component {
 	return e.componentsPast[i]
 }
 
+// GetComponents returns a slice of the entity's past components.
+// The returned slice is read‑only; mutating it may break the double‑buffer invariants.
+func (e *Entity) GetComponents() []Component {
+	return e.componentsPast
+}
+
 // Metodo pubblico per accedere al future (scrittura)
 func (e *Entity) GetFutureComponent(i int) Component {
 	return e.componentsFuture[i]
+}
+
+// GetFutureComponents returns a slice of the entity's future components.
+// The returned slice is read‑only; mutating it may break the double‑buffer invariants.
+func (e *Entity) GetFutureComponents() []Component {
+	return e.componentsFuture
 }
 
 // GetWritable restituisce un componente modificabile dal future per l'indice i.
@@ -122,6 +134,22 @@ func (e *Entity) Id() uint64 {
 func NewEntity(id uint64) *Entity {
 	return &Entity{
 		guid: id,
+	}
+}
+
+func Normalize(e *Entity) {
+	// Allarga la slice componentsFuture affinché abbia la stessa lunghezza del past.
+	if e.LenFutureComponent() < e.LenComponent() {
+		newFuture := make([]Component, e.LenComponent())
+		copy(newFuture, e.componentsFuture)
+		e.componentsFuture = newFuture
+	}
+
+	// Copia (clona) i componenti dal past al future dove il future è nil.
+	for i := 0; i < e.LenComponent(); i++ {
+		if e.componentsFuture[i] == nil && i < len(e.componentsPast) && e.componentsPast[i] != nil {
+			e.componentsFuture[i] = CopyComponent(e.componentsPast[i])
+		}
 	}
 }
 
