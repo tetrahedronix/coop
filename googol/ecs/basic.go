@@ -39,7 +39,10 @@ func (p *Position) TypeID() ComponentTypeID {
 
 func NewPosition() Component {
 
-	return &Position{}
+	return &Position{
+		componentType: ComponentTypePosition,
+		coordinate:    [2]float64{0, 0},
+	}
 }
 
 type Selectable struct {
@@ -68,7 +71,10 @@ func (s *Selectable) TypeID() ComponentTypeID {
 }
 
 func NewSelectable() Component {
-	return &Selectable{}
+	return &Selectable{
+		componentType: ComponentTypeSelectable,
+		selected:      false,
+	}
 }
 
 // The type of shape: for example circle or box
@@ -104,7 +110,10 @@ func (s *Shape) String() string {
 
 func NewShape() Component {
 
-	return &Shape{}
+	return &Shape{
+		componentType: ComponentTypeShape,
+		primitive:     "",
+	}
 }
 
 type Speed float64
@@ -144,5 +153,9 @@ func (v *Velocity) TypeID() ComponentTypeID {
 }
 
 func NewVelocity() Component {
-	return &Velocity{}
+	return &Velocity{
+		componentType: ComponentTypeVelocity,
+		speed:         0,
+		direction:     0,
+	}
 }
