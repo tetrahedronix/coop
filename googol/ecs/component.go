@@ -33,12 +33,23 @@ func CopyComponent(src Component) Component {
 		dst := NewPosition().(*Position)
 		dst.coordinate = src.coordinate
 		return dst
+	case *Selectable:
+		dst := NewSelectable().(*Selectable)
+		dst.selected = src.selected
+		return dst
 	case *Shape:
 		dst := NewShape().(*Shape)
 		dst.primitive = src.primitive
 		return dst
+	case *Velocity:
+		dst := NewVelocity().(*Velocity)
+		dst.speed = src.speed
+		dst.direction = src.direction
+		return dst
+
 		// Altri componenti
 		// ...
+
 	default:
 		panic("unsupported component type")
 	}
