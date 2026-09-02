@@ -40,7 +40,10 @@ The included examples demonstrate rendering, input handling, path‑finding, and
 
 This software was developed with the assistance of AI under continuous human supervision throughout the entire development process. AI-generated code is never accepted as-is: every contribution is reviewed, verified, tested, and consciously approved before being integrated into the project. AI is used as an assistant to make the development process faster, more efficient, and aligned with current technologies, while all final decisions remain under human responsibility.
 
-[AI Assisted](./share/images/ai-assisted.png)
+<p align="center">
+  <img src="share/ai-assisted.png" alt="AI Assisted disclaimer"/>
+</p>
+
 
 
 ## License
