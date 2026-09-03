@@ -1,7 +1,7 @@
-package googol
+package tenet
 
 import (
-	"github.com/tetrahedronix/coop/googol/ecs"
+	"github.com/tetrahedronix/coop/tenet/ecs"
 )
 
 func EqualPosition(a, b *ecs.Position) bool {

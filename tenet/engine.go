@@ -1,10 +1,10 @@
-package googol
+package tenet
 
 import (
 	"sync"
 	"time"
 
-	"github.com/tetrahedronix/coop/googol/ecs"
+	"github.com/tetrahedronix/coop/tenet/ecs"
 )
 
 type Loop struct {

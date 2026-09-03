@@ -1,6 +1,6 @@
-package googol
+package tenet
 
-import "github.com/tetrahedronix/coop/googol/ecs"
+import "github.com/tetrahedronix/coop/tenet/ecs"
 
 // Alias per tipi di componenti
 type (

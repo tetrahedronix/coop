@@ -1,4 +1,4 @@
-package googol
+package tenet
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/sony/sonyflake"
-	"github.com/tetrahedronix/coop/googol/ecs"
+	"github.com/tetrahedronix/coop/tenet/ecs"
 
 	"log"
 )
