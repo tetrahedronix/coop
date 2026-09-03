@@ -1,6 +1,9 @@
 package ecs
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 // Entities have IDs
 type Guid interface {
@@ -47,82 +50,62 @@ type Entity struct {
 	componentsFuture []Component
 }
 
-// Add a component to the entity
-// Metodo pubblico per aggiungere al past (solo inizializzazione)
-func (e *Entity) AddComponent(c Component, data ...interface{}) {
+// AddComponent aggiunge un componente al buffer past (solo inizializzazione).
+// Se c implementa TypedComponent, la sua identità viene registrata nella
+// bitmask signature (fast-path). Altrimenti, l'identità viene cercata nel
+// registry globale e registrata in dynamicSignature (slow-path). Il
+// componente deve essere già stato registrato con RegisterComponent se non è
+// TypedComponent, altrimenti AddComponent restituisce un errore.
+func (e *Entity) AddComponent(c Component) error {
 
-	e.componentsPast = append(e.componentsPast, c)
-	e.signature |= c.TypeID()
+	if tc, ok := c.(TypedComponent); ok {
+		e.signature |= tc.TypedID()
+		e.componentsPast = append(e.componentsPast, c)
 
-	for _, d := range data {
-		e.componentsPast[len(e.componentsPast)-1].Add(d)
-	}
-}
-
-func (e *Entity) AddFutureComponent(c Component, data ...any) {
-
-	e.componentsFuture = append(e.componentsFuture, c)
-
-	for _, d := range data {
-		e.componentsFuture[len(e.componentsFuture)-1].Add((d))
-	}
-}
-
-// Metodo pubblico per accedere al past (lettura)
-func (e *Entity) GetComponent(i int) Component {
-
-	return e.componentsPast[i]
-}
-
-// GetComponents returns a slice of the entity's past components.
-// The returned slice is read‑only; mutating it may break the double‑buffer invariants.
-func (e *Entity) GetComponents() []Component {
-	return e.componentsPast
-}
-
-// Metodo pubblico per accedere al future (scrittura)
-func (e *Entity) GetFutureComponent(i int) Component {
-	return e.componentsFuture[i]
-}
-
-// GetFutureComponents returns a slice of the entity's future components.
-// The returned slice is read‑only; mutating it may break the double‑buffer invariants.
-func (e *Entity) GetFutureComponents() []Component {
-	return e.componentsFuture
-}
-
-// GetWritable restituisce un componente modificabile dal future per l'indice i.
-// Se il future non ha un componente all'indice i, e il past ce l'ha, lo clona
-
-func (e *Entity) GetWritable(i int) Component {
-	if i < 0 {
 		return nil
 	}
 
-	if len(e.componentsFuture) <= i {
-		// e.componentsFuture = append(e.componentsFuture, nil)
-		// Crea un array di lunghezza i+1, preservando gli esistenti
-		newFuture := make([]Component, i+1)
-		copy(newFuture, e.componentsFuture)
-		e.componentsFuture = newFuture
+	t := reflect.TypeOf(c)
+
+	for t != nil && t.Kind() == reflect.Ptr {
+		t = t.Elem()
 	}
 
-	if e.componentsFuture[i] != nil {
-		return e.componentsFuture[i]
+	registry.mu.RLock()
+	id, ok := registry.byType[t]
+	registry.mu.RUnlock()
+
+	if !ok {
+		return fmt.Errorf("Tenet: componente %T non registrato; chiamare RegisterComponent prima di AddComponent", c)
 	}
 
-	if i < len(e.componentsPast) && e.componentsPast[i] != nil {
-		// Usa la funzione helper di copia esterna
-		e.componentsFuture[i] = CopyComponent(e.componentsPast[i])
-
-		return e.componentsFuture[i]
+	if e.dynamicSignature == nil {
+		e.dynamicSignature = make(map[ComponentID]struct{})
 	}
+
+	e.dynamicSignature[id] = struct{}{}
+	e.componentsPast = append(e.componentsPast, c)
 
 	return nil
-
 }
 
-func (e *Entity) HasComponent(tid ComponentTypeID) bool {
+// HasComponent verifica se l'entità possiede un componente registrato
+// dinamicamente (slow-path, via registry). Per i componente tipizzati
+// (bitmask) usare HasTypedComponent.
+func (e *Entity) HasComponent(id ComponentID) bool {
+	if e.dynamicSignature == nil {
+		return false
+	}
+
+	_, ok := e.dynamicSignature[id]
+
+	return ok
+}
+
+// HasTypedComponent verifica se l'entità possiede un componente Typed
+// (fast-path O(1), bia bitmask). Per i componenti registrati dinamicamente
+// usare invece HasComponent.
+func (e *Entity) HasTypedComponent(tid TypedComponentID) bool {
 	return (e.signature & tid) != 0
 }
 
