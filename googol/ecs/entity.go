@@ -9,26 +9,40 @@ type Guid interface {
 
 // Each Entity is nothing more than a Globally Unique Identifier (GUID)
 // with components attached to it.
-//
 // ----------------------------------------------------------------------------
-// EXTENSIBILITY NOTE (64-component limit)
+// EXTENSIBILITY NOTE (identità ibrida: bitmask + registry)
 //
-// The current entity signature uses a single uint64, limiting the engine
-// to 64 distinct component types. This is sufficient for the current scope.
+// L'entità traccia i componenti con due meccanismi distinti, perché
+// rispondono a domande diverse e non sono unificabili in un solo campo
+// senza rischiare collisioni tra ID di natura diversa:
 //
-// If more than 64 types are ever required, replace it with two fields:
+//   - signature (TypedComponentID, bitmask a 64 bit): fast-path O(1) per i
+//     componenti che implementano TypedComponent. Ogni tipo occupa un bit
+//     riservato
+//     a compile-time (1 << iota). Limite: max 64 tipi TypedComponent.
 //
-//	signatureBasics uint64  // component types 0-63
-//	signatureCustom uint64  // component types 64-127
+//   - dynamicSignature (set di ComponentID): componenti registrati a
+//     runtime tramite RegisterComponent, per i tipi che NON implementano
+//     TypedComponent. Nessun limite di cardinalità, ma lookup non O(1) come il
+//     bitmask (costo di un accesso a mappa).
 //
-// All bit operations (HasComponent, AddComponent, etc.) must be updated
-// accordingly. To also have fast future-buffer lookups, consider adding a
-// futureSignature (parallel to signature) and swapping it during SwapBuffers.
-// ----------------------------------------------------------------------------
+// Percorso di refactoring futuro (da valutare SOLO a POC completo e
+// funzionante, per non introdurre complessità non necessaria ora):
+// sostituire questo schema a due campi con un bitset a lunghezza variabile
+// unico, in cui i bit 0-63 restano riservati ai componenti TypedComponent e
+// i bit 64+ vengono assegnati dinamicamente agli ID di registry man mano che
+// vengono registrati. Questo richiede un tipo bitset custom (non un
+// singolo uint64) e la riscrittura di HasComponent/AddComponent per
+// operare su di esso; è un cambiamento strutturale, non incrementale,
+// quindi va pianificato come refactoring dedicato a parte.
+// ------------------------------------------------------------------
 type Entity struct {
 	// Use Sonyflake to get unique GUID
-	guid             uint64
-	signature        ComponentTypeID
+	guid uint64
+	// fast-path: solo componenti Typed
+	signature TypedComponentID
+	// componenti registrati dinamicamente
+	dynamicSignature map[ComponentID]struct{}
 	componentsPast   []Component
 	componentsFuture []Component
 }

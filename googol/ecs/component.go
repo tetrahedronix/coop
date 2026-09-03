@@ -7,10 +7,10 @@ import (
 	"sync"
 )
 
-type ComponentTypeID uint64
+type TypedComponentID uint64
 
 const (
-	ComponentTypePosition ComponentTypeID = 1 << iota
+	ComponentTypePosition TypedComponentID = 1 << iota
 	ComponentTypeSelectable
 	ComponentTypeShape
 	ComponentTypeVelocity
@@ -31,10 +31,10 @@ type Component interface {
 // identificati tramite il registry (via relect.Tye), senza bisogno di alcun
 // metodo stub.
 type TypedComponent interface {
-	TypedID() ComponentTypeID
+	TypedID() TypedComponentID
 }
 
-type ComponentID uint32
+type ComponentID uint64
 
 // componentRegistry assegna ComponentID crescenti e densi ai tipi di
 // componente registrati a runtime (tipicamente in init()). Non usa Sonyflake

@@ -81,6 +81,7 @@ Priority-ordered implementation roadmap for the Googol engine, based on the curr
 | 18 | **Serialization / Deserialization** | For saving/loading game state or networking. | Add `Marshal/Unmarshal` methods to `Component`; add `Serialize/Deserialize` methods to `Entity` and `World`. | `components.go` (extended `Component` interface), `entities.go` (serialization methods) | ⬜ |
 | 19 | **Events / messaging between systems** | Sometimes a system needs to notify other systems of events (e.g. collision, entity death). | Create a global event bus; systems can publish events during `Process()`; other systems can listen for them. | New `events` package or dedicated file | ⬜ |
 | 20 | **Profiling and debugging** | To optimize performance and understand what's happening. | Add metrics (system execution times, number of entities processed, etc.); add a debug panel (if graphical). | `engine.go` (metrics), new `debug` package | ⬜ |
+| 21 | **Unified variable bitset** | The dual-field scheme (bitmask + map) works, but it requires two separate checks during every lookup. A unified variable bitset would combine the fast-path and registry into a single mechanism. | Replace signature/dynamicSignature with a variable-length bitset; bits 0–63 reserved for Typed, 64+ dynamically assigned by the registry. Rewrite HasComponent/AddComponent accordingly. To be started only once the POC is complete and working. | `entity.go`, `component.go` |  ⬜ |
 
 ### 🗺️ Priority Summary (Tharsis roadmap)
 
