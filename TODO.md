@@ -64,7 +64,7 @@ Priority-ordered implementation roadmap for the Googol engine, based on the curr
 | # | Step | Why | What to do | Where | Status |
 |---|------|-----|-------------|-------|--------|
 | 13 | **Systems that process all entities** | Systems are currently empty. For a functioning ECS, systems must iterate over all entities and process their components. | Define a `System` interface with a `Process(*Entity)` method; create a `World.AddSystem(System)` method; in `Loop.Update()`, before `SwapBuffers`, call `system.Process(e)` for every entity; systems should read from the past (via `GetPastComponent`) and write to the future (via `GetWritableComponent`). | `system.go` (interface and methods), `game.go` (`systems` slice on `World`), `engine.go` (execution loop) | ⬜ |
-| 14 | **Component index management** | Using magic numbers (`e1.AddComponent(..., 1)`) is fragile and hard to read. A system to map component types to indices is needed. | Define a global or per‑entity registry mapping `ComponentTypeID` → index; or use a `map[ComponentTypeID]int` on the entity; alternatively, use a `map[ComponentTypeID]Component` instead of a slice (more flexible). | `components.go` (registry or map), `entities.go` (modify internal structure) | ⬜ |
+| 14 | **Component index management** | Using magic numbers (`e1.AddComponent(..., 1)`) is fragile and hard to read. A system to map component types to indices is needed. | Define a global or per‑entity registry mapping `ComponentTypeID` → index; or use a `map[ComponentTypeID]int` on the entity; alternatively, use a `map[ComponentTypeID]Component` instead of a slice (more flexible). | `components.go` (registry or map), `entities.go` (modify internal structure) | 🔄 |
 
 ### 🟡 MEDIUM PRIORITY (Improvements)
 
@@ -103,10 +103,10 @@ Priority-ordered implementation roadmap for the Googol engine, based on the curr
 
 ### 🔴 Critico
 
-| # | Issue | What to do | Where |
-|---|-------|-----------|-------|
-| 1 | **Limited ComponentTypeID** – Only 5 component types defined via `iota` (`component.go:6-11`). Adding new components requires modifying `iota` and all `CopyComponent` cases. | Extend `ComponentTypeID` to support more types (e.g., use `map[ComponentTypeID]Component` or increase bit-width). | `component.go` |
-| 2 | **Incomplete `CopyComponent`** – Only handles `*Position` and `*Shape`; panics with `unsupported component type` for `Velocity`, `Tile` (`component.go:30-45`). | Add cases for `*Velocity` and `*Tile`; consider a generic copy strategy. | `component.go` |
+| # | Issue | What to do | Where |  Status |
+|---|-------|-----------|-------|----------|
+| 1 | **Limited ComponentTypeID** – Only 5 component types defined via `iota` (`component.go:6-11`). Adding new components requires modifying `iota` and all `CopyComponent` cases. | Extend `ComponentTypeID` to support more types (e.g., use `map[ComponentTypeID]Component` or increase bit-width). | `component.go` |  |
+| 2 | **Incomplete `CopyComponent`** – Only handles `*Position` and `*Shape`; panics with `unsupported component type` for `Velocity`, `Tile` (`component.go:30-45`). | Add cases for `*Velocity` and `*Tile`; consider a generic copy strategy. | `component.go` | 🔄 |
 | 3 | **`SwapBuffers` length check** – Returns `false` if `LenComponent() != LenFutureComponent()` (`entity.go:163-165`). `Normalize` must be called manually before swap; not automatic. | Make `SwapBuffers` internally call `Normalize` or auto‑sync lengths; or document that `Normalize` must precede swap. | `entity.go` (`SwapBuffers`, `Normalize`) |
 | 4 | **No component removal API** – No method to remove a single component from an entity; only `PurgeRemoved` removes entire entities (`game.go:74-94`). | Add `RemoveComponent(tid ComponentTypeID) bool` to `Entity`. | `entity.go` |
 
