@@ -47,3 +47,21 @@ type Velocity struct {
 func (v *Velocity) TypedID() TypedComponentID {
 	return ComponentTypeVelocity
 }
+
+const (
+	TileFlipHorizFlag = 0x80000000
+	TileFlipVertFlag  = 0x40000000
+	TileFlipDiagFlag  = 0x20000000
+	TileIDMask        = 0x1FFFFFFF
+)
+
+// Tile rappresenta un tile della mappa. GID incorpora sia l'ID grezzo del
+// tile sia i flag di flip (orizzontale/verticale/diagonale), estraibili
+// tramite le costanti sopra.
+type Tile struct {
+	GID uint32 // Global Tile ID (inclide flag di flip)
+}
+
+func (t *Tile) TypedID() TypedComponentID {
+	return ComponentTypeTile
+}
