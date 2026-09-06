@@ -1,6 +1,8 @@
 # Coop‑Googol Engine
 
-**Coop‑Googol** is a Go‑based Entity‑Component‑System (ECS) engine that implements the *Tharsis* double‑buffering pattern. It powers a 2‑D tile‑based demo inspired by 'Road to Moscow' game (1984), built with Ebiten and optional Box2D for physics.
+**Coop** (to be renamed formula-421) is a suite of game development tools — engine and editor — built around the Entity-Component-System (ECS) paradigm, in its Tharsis double-buffering variant. A predictive extension to the buffering model, code-named "Tenet," is planned for a future release, adding a speculative third buffer alongside the current past/future pair.
+
+It powers a 2‑D tile‑based demo inspired by 'Road to Moscow' game (1984), built with Ebiten and optional Box2D for physics.
 
 The included examples demonstrate rendering, input handling, path‑finding, and optional physics integration. The roadmap is split into staged plans, key characteristics, and a priority‑ordered implementation list.
 
@@ -18,7 +20,7 @@ The included examples demonstrate rendering, input handling, path‑finding, and
    ```
 3. Build and run the demo:
    ```bash
-   go run ./src/examples/createEntity/main.go
+   go run ./examples/createEntity/main.go
    ```
    This example initializes a Googol world, creates an entity, attaches Shape and Position components, adds a dummy system, then prints the entity ID and each component's data.
 
@@ -41,7 +43,7 @@ The included examples demonstrate rendering, input handling, path‑finding, and
 This software was developed with the assistance of AI under continuous human supervision throughout the entire development process. AI-generated code is never accepted as-is: every contribution is reviewed, verified, tested, and consciously approved before being integrated into the project. AI is used as an assistant to make the development process faster, more efficient, and aligned with current technologies, while all final decisions remain under human responsibility.
 
 <p align="center">
-  <img src="share/ai-assisted.png" alt="AI Assisted disclaimer"/>
+  <img src="share/images/ai-assisted.png" alt="AI Assisted disclaimer"/>
 </p>
 
 
