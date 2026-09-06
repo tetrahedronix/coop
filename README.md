@@ -1,4 +1,4 @@
-# Coop‑Googol Engine
+# Coop
 
 **Coop** (to be renamed formula-421) is a suite of game development tools — engine and editor — built around the Entity-Component-System (ECS) paradigm, in its Tharsis double-buffering variant. A predictive extension to the buffering model, code-named "Tenet," is planned for a future release, adding a speculative third buffer alongside the current past/future pair.
 
