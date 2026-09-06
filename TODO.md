@@ -135,3 +135,33 @@ Priority-ordered implementation roadmap for the Googol engine, based on the curr
 | 14 | **No memory preallocation optimization** – `GetWritable` uses `make`+`copy` each time (`entity.go:88-93`). No capacity preallocation based on expected entity count. | Re-scoped to `Store[T]`: preallocate `values`/`entities` with capacity during store construction; simpler than the old per-entity heterogeneous slice since each store is homogeneous. | `store.go` (once created) |
 
 > **Recommended next step**: Complete the AoS→SoA pivot (roadmap item 22): define `EntityID`, then `Store[T]`, then rework `World`. Several items above (3, 6, 7, 8, 14) collapse or simplify automatically once component data lives in per-type stores rather than on `Entity` — resolving the pivot resolves them as a side effect.
+
+### Future Extension: Predictive Buffer (Store with Speculative Swap) — Post-POC
+
+> Idea introduced during a refactoring session, discussed and refined on [date].
+> Working name: **"Tenet"** (for the time-reversed mechanism:
+> the future is prepared before the present requests it, and validated
+> retroactively at the time of the swap).
+
+**Problem it solves**: In the classic Tharsis two-buffer model (past/future), the future of frame N is calculated *during* frame N by the Systems, starting from the past. There is no way to preemptively perform the work: each frame fully bears the computational cost of its components.
+
+**Proposed mechanism**: A predictive algorithm, executed concurrently with the main cycle (an independent goroutine, not a System inside `Loop.Update()`), prepares in advance—with a configurable lead of 1 or more frames—a candidate `future` buffer for each relevant `Store[T]`, based on recent history (past/present) and a heuristic model of likely events.
+
+**Key point — economic verification via signature, not data comparison**:
+The predictor does not attempt to guess the *values* of the components, but only *which component types* will be present/active in the next present. It encodes this prediction as a bitmask (`TypedComponentID`-based), in the exact same format as the signature already used for `HasTypedComponent` queries. At swap time, verification reduces to a **comparison between two integers** (predicted signature vs. signature actually requested by the current frame) — O(1), independent of the number and size of the components involved. This avoids the issue where "verifying the prediction costs as much as recalculating it": here, only the *set of types* is verified, not the *content*.
+
+**Illustrative example** (provided in the session): In frame 1 of a newly started game, the future buffer is empty, but it is reasonable to predict that "input" and "rendering" components will be needed (almost certain), while "menu"/exit is unlikely. In frame 2, in addition to "input"/"rendering," "sound" is also predicted (the player will likely move something that produces audio). The prediction is thus a problem of estimating a bitmask, not estimating values—a much more manageable problem.
+
+**Conditional swap flow, per `Store[T]`**:
+- **Hit** (predicted signature matches requested signature): swap `future → present`. The old `present` transitions normally to `past`. The Systems' calculation for that component type in that frame is avoided.
+- **Miss**: The standard two-stage Tharsis process applies—Systems calculate the new `present` from the `past`, the old `present` transitions to `past`, and the `future` (found to be incorrect) is discarded and recalculated by the predictor for the next attempt.
+
+**Identified requirements/constraints**:
+- The predictor must run *ahead* of the frame that consumes its prediction (at least 1 frame earlier), so it requires its own execution cadence, independent of the `Loop`'s 60fps cycle—not an additional synchronous `System`.
+- The benefit is proportional to the number of components/entities involved: it makes sense to activate it selectively on `Store[T]` with many entities or high per-component computational cost, not indiscriminately on all (configurable threshold, to be defined).
+- Additional hypothesized benefit: If the speculative `future` buffer resides in a low-latency memory area or is otherwise contiguous/close to the `past`/`present` buffers of the same `Store[T]`, the swap cost (on hit) approaches a simple pointer update, with potential cache locality benefits—to be verified via benchmarking once implemented, not assumed a priori.
+
+**Natural use case for the "Road to Moscow" demo**: AI deciding enemy unit moves—predicting the player's most likely move (and thus the components that will change as a result) is exactly the type of scenario this mechanism was designed for.
+
+**Status**: Idea refined and considered valid in principle.
+Explicitly postponed until after the completion of the AoS→SoA pivot (item 22) and the working POC, to avoid adding a third dimension of complexity (speculative swap) while the two-buffer form of `Store[T]` is still being stabilized. To be revisited alongside the review of item 15 (parallelism) and 17 (queries/archetypes), with which it shares concurrent execution and signature logic.
