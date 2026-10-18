@@ -22,6 +22,7 @@ RUN ln -s "$NVM_DIR/versions/node/$(. $NVM_DIR/nvm.sh && nvm version default)" /
 ENV PATH="/usr/local/nvm-default/bin:${PATH}"
 
 # Installazione di OpenCode via npm
-RUN . "$NVM_DIR/nvm.sh" && npm install -g --allow-scripts=opencode-ai opencode-ai 
+ARG OPENCODE_VERSION=latest
+RUN . "$NVM_DIR/nvm.sh" && npm install -g --allow-scripts=opencode-ai opencode-ai@${OPENCODE_VERSION}
 
 WORKDIR /workspace
