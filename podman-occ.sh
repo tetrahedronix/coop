@@ -1,8 +1,8 @@
 #!/bin/sh
 
 WORKDIR="$(cd "$(dirname "$0")" && pwd)"
-
-mkdir -p "$HOME/.occ/homes/coop"
+OCC_DIR=".occ/homes/coop"
+mkdir -p "$HOME/$OCC_DIR"
 
 cd "$WORKDIR" || exit 1
 
@@ -16,7 +16,7 @@ fi
 podman run --rm -it \
   --userns=keep-id \
   --network=slirp4netns \
-  -v "$HOME/.occ/homes/coop":/home/opencode:Z \
+  -v "$HOME/$OCC_DIR":/home/opencode:Z \
   -e GH_TOKEN="$GH_TOKEN" \
   -e HOME=/home/opencode \
   -e GIT_CONFIG_GLOBAL=/tmp/.gitconfig \
